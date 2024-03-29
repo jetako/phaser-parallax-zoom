@@ -1,0 +1,17 @@
+{
+    "name": "phaser-parallax-zoom",
+    "description": "Phaser 3 parallax zoom",
+    "version": "1.2.1",
+    "type": "module",
+    "scripts": {
+        "dev": "vite --config vite/config.dev.mjs",
+        "build": "vite build --config vite/config.prod.mjs"
+    },
+    "devDependencies": {
+        "terser": "^5.28.1",
+        "vite": "^5.1.4"
+    },
+    "dependencies": {
+        "phaser": "^3.80.1"
+    }
+}
