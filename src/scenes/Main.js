@@ -48,6 +48,7 @@ export class Main extends Scene {
     }
 
     this.zoom = 0
+    this.translateX = 0
 
     this.cursors = this.input.keyboard.createCursorKeys()
   }
@@ -58,16 +59,22 @@ export class Main extends Scene {
     } else if (this.cursors.down.isDown) {
       this.zoom -= 0.05
     }
+    if (this.cursors.left.isDown) {
+      this.translateX += 2
+    } else if (this.cursors.right.isDown) {
+      this.translateX -= 2
+    }
 
     this.zoom = Math.max(0, this.zoom)
 
     for (const obj of this.sceneObjects) {
       let zFactor = (1000 - obj.z) / 1000
-      let speedX = (obj.identity.x / 3) * zFactor
-      let speedY = (obj.identity.y / 3) * zFactor
+      let zx = (obj.identity.x / 3) * zFactor
+      let zy = (obj.identity.y / 3) * zFactor
+      let offsetX = this.translateX * zFactor * 2
     
-      obj.object.x = obj.identity.x + this.zoom * speedX
-      obj.object.y = obj.identity.y + this.zoom * speedY
+      obj.object.x = obj.identity.x + this.zoom * zx + offsetX
+      obj.object.y = obj.identity.y + this.zoom * zy
       obj.object.setScale(0.5 + this.zoom * (zFactor / 10))
     }
   }
