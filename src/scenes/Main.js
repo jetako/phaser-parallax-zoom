@@ -24,17 +24,17 @@ export class Main extends Scene {
     this.add.image(-camera.width / 2, camera.height / 2, 'background')
 
     this.clouds = [
-      { object: this.add.sprite(-375, 80, 'cloud_left_1'), zx: -1000, zy: 0, zs: 1.1 },
-      { object: this.add.sprite(400, 80, 'cloud_right_1'), zx: 1000, zy: 0, zs: 1.1 },
-      { object: this.add.sprite(-500, 100, 'cloud_left_2'), zx: -1500, zy: 0, zs: 1.2 },
-      { object: this.add.sprite(500, 100, 'cloud_right_2'), zx: 1500, zy: 0, zs: 1.2 },
-      { object: this.add.sprite(-560, 120, 'cloud_left_3'), zx: -2000, zy: 0, zs: 1.3 },
-      { object: this.add.sprite(560, 120, 'cloud_right_3'), zx: 2000, zy: 0, zs: 1.3 },
+      { object: this.add.sprite(-375, 80, 'cloud_left_1'), z: -200 },
+      { object: this.add.sprite(400, 80, 'cloud_right_1'), z: -200 },
+      { object: this.add.sprite(-500, 100, 'cloud_left_2'), z: -400 },
+      { object: this.add.sprite(500, 100, 'cloud_right_2'), z: -400 },
+      { object: this.add.sprite(-560, 120, 'cloud_left_3'), z: -600 },
+      { object: this.add.sprite(560, 120, 'cloud_right_3'), z: -600 },
     ]
 
-    this.lantern = { object: this.add.sprite(0, -50, 'lantern'), zx: 0, zy: -800, zs: 1.2 }
+    this.lantern = { object: this.add.sprite(0, -50, 'lantern'), z: 0 }
 
-    this.ground = { object: this.add.image(0, 300, 'ground'), zx: 0, zy: 400, zs: 1.4 }
+    this.ground = { object: this.add.image(0, 300, 'ground'), z: 0 }
 
     this.sceneObjects = [
       ...this.clouds,
@@ -47,24 +47,28 @@ export class Main extends Scene {
       obj.identity = { x: obj.object.x, y: obj.object.y }
     }
 
-    this.cursors = this.input.keyboard.createCursorKeys()
-
     this.zoom = 0
+
+    this.cursors = this.input.keyboard.createCursorKeys()
   }
 
   update(time, delta) {
     if (this.cursors.up.isDown) {
-      this.zoom += 0.005
+      this.zoom += 0.05
     } else if (this.cursors.down.isDown) {
-      this.zoom -= 0.005
+      this.zoom -= 0.05
     }
 
     this.zoom = Math.max(0, this.zoom)
 
     for (const obj of this.sceneObjects) {
-      obj.object.x = obj.identity.x + this.zoom * obj.zx
-      obj.object.y = obj.identity.y + this.zoom * obj.zy
-      obj.object.setScale(0.5 + this.zoom * obj.zs)
+      let zFactor = (1000 - obj.z) / 1000
+      let speedX = (obj.identity.x / 3) * zFactor
+      let speedY = (obj.identity.y / 3) * zFactor
+    
+      obj.object.x = obj.identity.x + this.zoom * speedX
+      obj.object.y = obj.identity.y + this.zoom * speedY
+      obj.object.setScale(0.5 + this.zoom * (zFactor / 10))
     }
   }
 }
